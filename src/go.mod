@@ -1,3 +1,3 @@
-module 6.5840
+module mit
 
-go 1.15
+go 1.20

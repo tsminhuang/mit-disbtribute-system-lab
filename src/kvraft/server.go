@@ -1,49 +1,47 @@
 package kvraft
 
 import (
-	"6.5840/labgob"
-	"6.5840/labrpc"
-	"6.5840/raft"
-	"log"
-	"sync"
-	"sync/atomic"
+    "log"
+    "mit/labgob"
+    "mit/labrpc"
+    "mit/raft"
+    "sync"
+    "sync/atomic"
 )
 
 const Debug = false
 
 func DPrintf(format string, a ...interface{}) (n int, err error) {
-	if Debug {
-		log.Printf(format, a...)
-	}
-	return
+    if Debug {
+        log.Printf(format, a...)
+    }
+    return
 }
 
-
 type Op struct {
-	// Your definitions here.
-	// Field names must start with capital letters,
-	// otherwise RPC will break.
+    // Your definitions here.
+    // Field names must start with capital letters,
+    // otherwise RPC will break.
 }
 
 type KVServer struct {
-	mu      sync.Mutex
-	me      int
-	rf      *raft.Raft
-	applyCh chan raft.ApplyMsg
-	dead    int32 // set by Kill()
+    mu      sync.Mutex
+    me      int
+    rf      *raft.Raft
+    applyCh chan raft.ApplyMsg
+    dead    int32 // set by Kill()
 
-	maxraftstate int // snapshot if log grows this big
+    maxraftstate int // snapshot if log grows this big
 
-	// Your definitions here.
+    // Your definitions here.
 }
 
-
 func (kv *KVServer) Get(args *GetArgs, reply *GetReply) {
-	// Your code here.
+    // Your code here.
 }
 
 func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
-	// Your code here.
+    // Your code here.
 }
 
 // the tester calls Kill() when a KVServer instance won't
@@ -55,14 +53,14 @@ func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 // about this, but it may be convenient (for example)
 // to suppress debug output from a Kill()ed instance.
 func (kv *KVServer) Kill() {
-	atomic.StoreInt32(&kv.dead, 1)
-	kv.rf.Kill()
-	// Your code here, if desired.
+    atomic.StoreInt32(&kv.dead, 1)
+    kv.rf.Kill()
+    // Your code here, if desired.
 }
 
 func (kv *KVServer) killed() bool {
-	z := atomic.LoadInt32(&kv.dead)
-	return z == 1
+    z := atomic.LoadInt32(&kv.dead)
+    return z == 1
 }
 
 // servers[] contains the ports of the set of
@@ -78,20 +76,20 @@ func (kv *KVServer) killed() bool {
 // StartKVServer() must return quickly, so it should start goroutines
 // for any long-running work.
 func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persister, maxraftstate int) *KVServer {
-	// call labgob.Register on structures you want
-	// Go's RPC library to marshall/unmarshall.
-	labgob.Register(Op{})
+    // call labgob.Register on structures you want
+    // Go's RPC library to marshall/unmarshall.
+    labgob.Register(Op{})
 
-	kv := new(KVServer)
-	kv.me = me
-	kv.maxraftstate = maxraftstate
+    kv := new(KVServer)
+    kv.me = me
+    kv.maxraftstate = maxraftstate
 
-	// You may need initialization code here.
+    // You may need initialization code here.
 
-	kv.applyCh = make(chan raft.ApplyMsg)
-	kv.rf = raft.Make(servers, me, persister, kv.applyCh)
+    kv.applyCh = make(chan raft.ApplyMsg)
+    kv.rf = raft.Make(servers, me, persister, kv.applyCh)
 
-	// You may need initialization code here.
+    // You may need initialization code here.
 
-	return kv
+    return kv
 }
